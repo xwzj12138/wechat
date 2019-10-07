@@ -1,9 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2019/5/25
- * Time: 12:01
+ * 基础数据类
  */
 
 namespace Wechat\Pay;

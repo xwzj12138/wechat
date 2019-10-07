@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2019/10/7
- * Time: 14:58
+ * 统一下单输入对象
+ * @author xwzj
  */
 
 namespace Wechat\Pay;
