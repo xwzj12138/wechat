@@ -12,7 +12,6 @@ namespace Wechat\Pay;
 class WxPayNotify extends WxPayDataBase
 {
     protected $FromXml;
-    protected $values;
     /**
      * 回调入口
      */

@@ -12,8 +12,81 @@ use Wechat\Exception\WxPayException;
 
 class WxPayDataBase
 {
+    protected $partnerkey;
     protected $values = array();
+    /**
+     * 设置微信分配的公众账号ID
+     * @param string $value
+     **/
+    public function SetAppid($value)
+    {
+        $this->values['appid'] = $value;
+    }
+    /**
+     * 获取微信分配的公众账号ID的值
+     * @return 值
+     **/
+    public function GetAppid()
+    {
+        return $this->values['appid'];
+    }
+    /**
+     * 判断微信分配的公众账号ID是否存在
+     * @return true 或 false
+     **/
+    public function IsAppidSet()
+    {
+        return array_key_exists('appid', $this->values);
+    }
+    /**
+     * 设置微信支付分配的商户号
+     * @param string $value
+     **/
+    public function SetMch_id($value)
+    {
+        $this->values['mch_id'] = $value;
+    }
+    /**
+     * 获取微信支付分配的商户号的值
+     * @return 值
+     **/
+    public function GetMch_id()
+    {
+        return $this->values['mch_id'];
+    }
+    /**
+     * 判断微信支付分配的商户号是否存在
+     * @return true 或 false
+     **/
+    public function IsMch_idSet()
+    {
+        return array_key_exists('mch_id', $this->values);
+    }
 
+    /**
+     * 设置支付时间戳
+     * @param string $value
+     **/
+    public function SetTime_stamp($value)
+    {
+        $this->values['time_stamp'] = $value;
+    }
+    /**
+     * 获取支付时间戳的值
+     * @return 值
+     **/
+    public function GetTime_stamp()
+    {
+        return $this->values['time_stamp'];
+    }
+    /**
+     * 判断支付时间戳是否存在
+     * @return true 或 false
+     **/
+    public function IsTime_stampSet()
+    {
+        return array_key_exists('time_stamp', $this->values);
+    }
     /**
      * 设置签名，详见签名生成算法
      * @param string $value
@@ -106,12 +179,11 @@ class WxPayDataBase
      */
     public function MakeSign()
     {
-        $config = config('wechat');
         //签名步骤一：按字典序排序参数
         ksort($this->values);
         $string = $this->ToUrlParams();
         //签名步骤二：在string后加入KEY
-        $string = $string . "&key=".$config['partnerkey'];
+        $string = $string . "&key=".$this->partnerkey;
         //签名步骤三：MD5加密
         $string = md5($string);
         //签名步骤四：所有字符转为大写
