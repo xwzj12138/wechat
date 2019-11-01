@@ -9,9 +9,8 @@
 namespace Wechat\Pay;
 
 
-class WxPayReverse
+class WxPayReverse extends WxPayDataBase
 {
-    use WxPayDataBase;
     //api证书公钥文件
     protected $sslcert_path;
     //api证书私钥

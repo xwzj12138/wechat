@@ -6,7 +6,7 @@
 namespace Wechat\Pay;
 
 
-trait WxPayDataBase
+class WxPayDataBase
 {
     protected $partnerkey;
     protected $values = array();

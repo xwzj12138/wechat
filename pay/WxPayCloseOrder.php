@@ -1,6 +1,6 @@
 <?php
 /**
- * Notes:
+ * Notes: 关闭订单输入对象
  * Date: 2019/11/1
  * @author: 陈星星
  */
@@ -8,9 +8,8 @@
 namespace Wechat\Pay;
 
 
-class WxPayCloseOrder
+class WxPayCloseOrder extends WxPayDataBase
 {
-    use WxPayDataBase;
 
     /**
      * 设置微信分配的公众账号ID

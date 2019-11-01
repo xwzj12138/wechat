@@ -8,9 +8,8 @@
 namespace Wechat\Pay;
 
 
-class WxPayRefund
+class WxPayRefund extends WxPayDataBase
 {
-    use WxPayDataBase;
 
     //api证书公钥文件
     protected $sslcert_path;

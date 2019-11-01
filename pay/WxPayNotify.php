@@ -9,9 +9,8 @@
 namespace Wechat\Pay;
 
 
-class WxPayNotify
+class WxPayNotify extends WxPayDataBase
 {
-    use WxPayDataBase;
 
     protected $FromXml;
     /**

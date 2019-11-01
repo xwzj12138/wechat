@@ -9,9 +9,8 @@
 namespace Wechat\Pay;
 
 
-class WxPayShortUrl
+class WxPayShortUrl extends WxPayDataBase
 {
-    use WxPayDataBase;
 
     /**
      * 设置需要转换的URL，签名用原串，传输需URL encode

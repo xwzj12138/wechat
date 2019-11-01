@@ -1,6 +1,6 @@
 <?php
 /**
- * Notes:
+ * Notes: 退款查询输入对象
  * Date: 2019/11/1
  * @author: 陈星星
  */
@@ -8,9 +8,8 @@
 namespace Wechat\Pay;
 
 
-class WxPayRefundQuery
+class WxPayRefundQuery extends WxPayDataBase
 {
-    use WxPayDataBase;
 
     /**
      * 设置微信分配的公众账号ID

@@ -407,4 +407,25 @@ class WxPayApi
             throw new WxPayException("curl出错，错误码:$error");
         }
     }
+
+    /**
+     * app支付签名
+     */
+    public function getPayInfo($wxorder)
+    {
+        $array = ['appId'=>$wxorder['appid'],'timeStamp'=>(string)time(),'nonceStr'=>self::getNonceStr()];
+        if($wxorder['trade_type']=='APP'){
+            $array['partnerid'] = $wxorder['mch_id'];
+            $array['prepayid'] = $wxorder['prepay_id'];
+            $array['package'] = 'Sign=WXPay';
+        }else{
+            $array['package'] = "prepay_id=".$wxorder['prepay_id'];
+            $array['signType'] = "md5";
+        }
+        $wx_pay_data = new WxPayDataBase();
+        $wx_pay_data->FromArray($array);
+        $sign = $wx_pay_data->MakeSign();
+        $array['paySign'] = $sign;
+        return $array;
+    }
 }

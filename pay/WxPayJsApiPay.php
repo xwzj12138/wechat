@@ -9,9 +9,8 @@
 namespace Wechat\Pay;
 
 
-class WxPayJsApiPay
+class WxPayJsApiPay extends WxPayDataBase
 {
-    use WxPayDataBase;
     /**
      * 设置支付时间戳
      * @param string $value

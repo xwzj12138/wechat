@@ -9,9 +9,8 @@
 namespace Wechat\Pay;
 
 
-class WxPayBizPayUrl
+class WxPayBizPayUrl extends WxPayDataBase
 {
-    use WxPayDataBase;
     /**
      * 设置随机字符串
      * @param string $value
