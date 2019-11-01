@@ -6,11 +6,7 @@
 namespace Wechat\Pay;
 
 
-use Wechat\Exception\Analysis;
-use Wechat\Exception\SignException;
-use Wechat\Exception\WxPayException;
-
-class WxPayDataBase
+trait WxPayDataBase
 {
     protected $partnerkey;
     protected $values = array();
@@ -89,8 +85,8 @@ class WxPayDataBase
     }
     /**
      * 设置签名，详见签名生成算法
-     * @param string $value
-     **/
+     * @return string $value
+     */
     public function SetSign()
     {
         $sign = $this->MakeSign();
@@ -142,7 +138,9 @@ class WxPayDataBase
 
     /**
      * 将xml转为array
-     * @param string $xml
+     * @param $xml
+     * @return array|mixed
+     * @throws WxPayException
      */
     public function FromXml($xml)
     {
@@ -174,8 +172,8 @@ class WxPayDataBase
     }
 
     /**
-     * 生成签名
-     * @return 签名，本函数不覆盖sign成员变量，如要设置签名需要调用SetSign方法赋值
+     * 生成签名,本函数不覆盖sign成员变量，如要设置签名需要调用SetSign方法赋值
+     * @return 签名
      */
     public function MakeSign()
     {
@@ -234,9 +232,11 @@ class WxPayDataBase
     {
         $this->values[$key] = $value;
     }
+
     /**
      * 将xml转为array
-     * @param string $xml
+     * @param $xml
+     * @return array
      * @throws WxPayException
      */
     public static function Init($xml)

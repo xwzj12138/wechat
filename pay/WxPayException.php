@@ -1,9 +1,11 @@
 <?php
 /**
- * WechatSDK 异常类
+ * Notes:
+ * Date: 2019/11/1
+ * @author: 陈星星
  */
 
-namespace Wechat\Exception;
+namespace Wechat\Pay;
 
 
 class WxPayException extends \Exception

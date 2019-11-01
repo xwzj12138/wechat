@@ -9,8 +9,9 @@
 namespace Wechat\Pay;
 
 
-class WxPayMicroPay extends WxPayDataBase
+class WxPayMicroPay
 {
+    use WxPayDataBase;
     /**
      * 设置终端设备号(商户自定义，如门店编号)
      * @param string $value

@@ -7,8 +7,9 @@
 namespace Wechat\Pay;
 
 
-class WxPayUnifiedOrder extends WxPayDataBase
+class WxPayUnifiedOrder
 {
+    use WxPayDataBase;
     /**
      * 设置微信支付分配的终端设备号，商户自定义
      * @param string $value
@@ -33,7 +34,6 @@ class WxPayUnifiedOrder extends WxPayDataBase
     {
         return array_key_exists('device_info', $this->values);
     }
-
 
     /**
      * 设置随机字符串，不长于32位。推荐随机数生成算法
@@ -84,7 +84,6 @@ class WxPayUnifiedOrder extends WxPayDataBase
     {
         return array_key_exists('body', $this->values);
     }
-
 
     /**
      * 设置商品名称明细列表

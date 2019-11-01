@@ -9,8 +9,9 @@
 namespace Wechat\Pay;
 
 
-class WxPayDownloadBill extends WxPayDataBase
+class WxPayDownloadBill
 {
+    use WxPayDataBase;
     /**
      * 设置微信支付分配的终端设备号，填写此字段，只下载该设备号的对账单
      * @param string $value

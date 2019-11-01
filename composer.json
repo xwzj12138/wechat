@@ -1,6 +1,7 @@
 {
     "name": "xwzj/wechat",
     "description": "this is wechat sdk",
+    "keywords": ["wechat", "wechat-sdk", "wechatSDK", "weixin-sdk", "weixin"],
     "type": "library",
     "license": "Apache-2.0",
     "authors": [
@@ -10,7 +11,9 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {},
+    "require": {
+        "php": ">=5.6"
+    },
     "repositories": {
         "packagist": {
             "type": "composer",
@@ -19,7 +22,6 @@
     },
     "autoload":{
         "psr-4":{
-            "Wechat\\Exception\\":"exception/",
             "Wechat\\Pay\\":"pay/"
         }
     }

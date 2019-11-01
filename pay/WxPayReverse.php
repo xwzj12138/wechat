@@ -9,8 +9,9 @@
 namespace Wechat\Pay;
 
 
-class WxPayReverse extends WxPayDataBase
+class WxPayReverse
 {
+    use WxPayDataBase;
     /**
      * 设置微信的订单号，优先使用
      * @param string $value

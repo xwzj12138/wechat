@@ -9,8 +9,10 @@
 namespace Wechat\Pay;
 
 
-class WxPayShortUrl extends WxPayDataBase
+class WxPayShortUrl
 {
+    use WxPayDataBase;
+
     /**
      * 设置需要转换的URL，签名用原串，传输需URL encode
      * @param string $value
@@ -19,6 +21,7 @@ class WxPayShortUrl extends WxPayDataBase
     {
         $this->values['long_url'] = $value;
     }
+
     /**
      * 获取需要转换的URL，签名用原串，传输需URL encode的值
      * @return 值
@@ -27,6 +30,7 @@ class WxPayShortUrl extends WxPayDataBase
     {
         return $this->values['long_url'];
     }
+
     /**
      * 判断需要转换的URL，签名用原串，传输需URL encode是否存在
      * @return true 或 false
@@ -36,7 +40,6 @@ class WxPayShortUrl extends WxPayDataBase
         return array_key_exists('long_url', $this->values);
     }
 
-
     /**
      * 设置随机字符串，不长于32位。推荐随机数生成算法
      * @param string $value
@@ -45,6 +48,7 @@ class WxPayShortUrl extends WxPayDataBase
     {
         $this->values['nonce_str'] = $value;
     }
+
     /**
      * 获取随机字符串，不长于32位。推荐随机数生成算法的值
      * @return 值
@@ -53,6 +57,7 @@ class WxPayShortUrl extends WxPayDataBase
     {
         return $this->values['nonce_str'];
     }
+
     /**
      * 判断随机字符串，不长于32位。推荐随机数生成算法是否存在
      * @return true 或 false
