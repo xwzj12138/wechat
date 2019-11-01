@@ -22,11 +22,26 @@ $inputObj = new WxPayUnifiedOrder();
 //支付类型：JSAPI，NATIVE，APP，
 $inputObj->SetTrade_type('APP');
 
+//设置商品或支付单简要描述
+$inputObj->SetBody('摩推支付');
+
+//用户唯一标识
+$inputObj->SetOpenid('gvdbgdsnbggcc');
+
+//商户订单号
+$inputObj->SetOut_trade_no('gvdbgdsnbggcc');
+
+//支付回调url
+$inputObj->SetNotify_url('http://');
+
 //设置appid
 $inputObj->SetAppid('vfdsbfdsbfdsdf');
 
+//设置商户号
+$wxorderdata->SetMch_id('vcdsbgffsbfd');
+
 //设置支付价格，单位：分
-$inputObj->SetTotal_fee(500);
+$inputObj->SetTotal_fee(5*100);
 
 //获取统一下单接口信息
 $wx_pay = new WxPayApi($inputObj);
@@ -54,12 +69,33 @@ use Wechat\Pay\WxPayUnifiedOrder;
 
 //实例化请求的数据对象
 $inputObj = new WxPayUnifiedOrder();
+//支付类型：JSAPI，NATIVE，APP，
+$inputObj->SetTrade_type('APP');
+
+//设置商品或支付单简要描述
+$inputObj->SetBody('摩推支付');
+
+//用户唯一标识
+$inputObj->SetOpenid('gvdbgdsnbggcc');
+
+//商户订单号
+$inputObj->SetOut_trade_no('gvdbgdsnbggcc');
+
+//支付回调url
+$inputObj->SetNotify_url('http://');
+
 //设置appid
 $inputObj->SetAppid('vfdsbfdsbfdsdf');
+
+//设置商户号
+$wxorderdata->SetMch_id('vcdsbgffsbfd');
+
 //设置支付价格，单位：分
-$inputObj->SetTotal_fee(500);
+$inputObj->SetTotal_fee(5*100);
+
 //获取统一下单接口信息
 $wx_pay = new WxPayApi($inputObj);
+
 if($wx_pay['return_code']!="SUCCESS" || $wx_pay['result_code'] !="SUCCESS")
 {
     $msg = empty($wx_pay['err_code_des'])?$wx_pay['return_msg']:$wx_pay['err_code_des'];
