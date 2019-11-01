@@ -13,7 +13,6 @@ namespace Wechat\Pay;
 class WxPayApi
 {
     /**
-     *
      * 统一下单，WxPayUnifiedOrder中out_trade_no、body、total_fee、trade_type必填
      * appid、mchid、spbill_create_ip、nonce_str不需要填入
      * @param WxPayUnifiedOrder $inputObj
@@ -54,7 +53,7 @@ class WxPayApi
         //签名
         $inputObj->SetSign();
         $xml = $inputObj->ToXml();
-        $response = self::postXmlCurl($xml, $url, false, $timeOut);
+        $response = self::postXmlCurl($xml, $url, $timeOut);
         return WxPayDataBase::Init($response);
     }
 
@@ -79,7 +78,7 @@ class WxPayApi
         $inputObj->SetSign();//签名
         $xml = $inputObj->ToXml();
 
-        $response = self::postXmlCurl($xml, $url, false, $timeOut);
+        $response = self::postXmlCurl($xml, $url, $timeOut);
         return WxPayDataBase::Init($response);
     }
 
@@ -104,7 +103,7 @@ class WxPayApi
         $inputObj->SetSign();//签名
         $xml = $inputObj->ToXml();
 
-        $response = self::postXmlCurl($xml, $url, false, $timeOut);
+        $response = self::postXmlCurl($xml, $url, $timeOut);
         return WxPayDataBase::Init($response);
     }
 
@@ -133,11 +132,14 @@ class WxPayApi
         }else if(!$inputObj->IsOp_user_idSet()){
             throw new WxPayException("退款申请接口中，缺少必填参数op_user_id！");
         }
+        if($inputObj->GetSslkey_path()==null || $inputObj->GetSslcert_path()==null){
+            throw new WxPayException("该接口必须使用api证书，请设置api证书文件路径");
+        }
         $inputObj->SetNonce_str(self::getNonceStr());//随机字符串
 
         $inputObj->SetSign();//签名
         $xml = $inputObj->ToXml();
-        $response = self::postXmlCurl($xml, $url, true, $timeOut);
+        $response = self::postXmlCurl($xml, $url, $timeOut,$inputObj->GetSslcert_path(),$inputObj->GetSslkey_path());
         return WxPayDataBase::Init($response);
     }
 
@@ -167,7 +169,7 @@ class WxPayApi
 
         $inputObj->SetSign();//签名
         $xml = $inputObj->ToXml();
-        $response = self::postXmlCurl($xml, $url, false, $timeOut);
+        $response = self::postXmlCurl($xml, $url, $timeOut);
         $result = WxPayDataBase::Init($response);
 
         return $result;
@@ -193,7 +195,7 @@ class WxPayApi
         $inputObj->SetSign();//签名
         $xml = $inputObj->ToXml();
 
-        $response = self::postXmlCurl($xml, $url, false, $timeOut);
+        $response = self::postXmlCurl($xml, $url, $timeOut);
         if(substr($response, 0 , 5) == "<xml>"){
             return "";
         }
@@ -231,7 +233,7 @@ class WxPayApi
         $inputObj->SetSign();//签名
         $xml = $inputObj->ToXml();
 
-        $response = self::postXmlCurl($xml, $url, false, $timeOut);
+        $response = self::postXmlCurl($xml, $url, $timeOut);
         $result = WxPayDataBase::Init($response);
 
         return $result;
@@ -252,12 +254,15 @@ class WxPayApi
         if(!$inputObj->IsOut_trade_noSet() && !$inputObj->IsTransaction_idSet()) {
             throw new WxPayException("撤销订单API接口中，参数out_trade_no和transaction_id必须填写一个！");
         }
+        if($inputObj->GetSslkey_path()==null || $inputObj->GetSslcert_path()==null){
+            throw new WxPayException("该接口必须使用api证书，请设置api证书文件路径");
+        }
         $inputObj->SetNonce_str(self::getNonceStr());//随机字符串
 
         $inputObj->SetSign();//签名
         $xml = $inputObj->ToXml();
 
-        $response = self::postXmlCurl($xml, $url, true, $timeOut);
+        $response = self::postXmlCurl($xml, $url, $timeOut,$inputObj->GetSslcert_path(),$inputObj->GetSslkey_path());
         return WxPayDataBase::Init($response);
     }
 
@@ -266,11 +271,10 @@ class WxPayApi
      * 生成二维码规则,模式一生成支付二维码
      * appid、mchid、spbill_create_ip、nonce_str不需要填入
      * @param WxPayBizPayUrl $inputObj
-     * @param int $timeOut
      * @throws WxPayException
      * @return 成功时返回，其他抛异常
      */
-    public static function bizpayurl(WxPayBizPayUrl $inputObj, $timeOut = 6)
+    public static function bizpayurl(WxPayBizPayUrl $inputObj)
     {
         if(!$inputObj->IsProduct_idSet()){
             throw new WxPayException("生成二维码，缺少必填参数product_id！");
@@ -366,7 +370,7 @@ class WxPayApi
      * @return mixed
      * @throws WxPayException
      */
-    private static function postXmlCurl($xml, $url,$second = 30)
+    private static function postXmlCurl($xml, $url,$second = 30,$sslcert_path=null,$sslkey_path=null)
     {
         $ch = curl_init();
         //设置超时
@@ -380,13 +384,13 @@ class WxPayApi
         //要求结果为字符串且输出到屏幕上
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 
-        if($useCert == true){
+        if($sslcert_path && $sslkey_path){
             //设置证书
             //使用证书：cert 与 key 分别属于两个.pem文件
             curl_setopt($ch,CURLOPT_SSLCERTTYPE,'PEM');
-            curl_setopt($ch,CURLOPT_SSLCERT, WxPayConfig::SSLCERT_PATH);
+            curl_setopt($ch,CURLOPT_SSLCERT, $sslcert_path);
             curl_setopt($ch,CURLOPT_SSLKEYTYPE,'PEM');
-            curl_setopt($ch,CURLOPT_SSLKEY, WxPayConfig::SSLKEY_PATH);
+            curl_setopt($ch,CURLOPT_SSLKEY, $sslkey_path);
         }
         //post提交方式
         curl_setopt($ch, CURLOPT_POST, TRUE);

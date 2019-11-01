@@ -12,6 +12,10 @@ class WxPayRefund
 {
     use WxPayDataBase;
 
+    //api证书公钥文件
+    protected $sslcert_path;
+    //api证书私钥
+    protected $sslkey_path;
     /**
      * 设置微信分配的公众账号ID
      * @param string $value
@@ -294,5 +298,39 @@ class WxPayRefund
     public function IsOp_user_idSet()
     {
         return array_key_exists('op_user_id', $this->values);
+    }
+
+    /**
+     * 设置证书
+     * @param string $value
+     **/
+    public function SetSslcert_path($value)
+    {
+        $this->sslcert_path = $value;
+    }
+    /**
+     * 设置证书
+     * @return 值
+     **/
+    public function GetSslcert_path()
+    {
+        return $this->sslcert_path;
+    }
+
+    /**
+     * 设置证书
+     * @param string $value
+     **/
+    public function SetSslkey_path($value)
+    {
+        $this->sslkey_path = $value;
+    }
+    /**
+     * 设置证书
+     * @return 值
+     **/
+    public function GetSslkey_path()
+    {
+        return $this->sslkey_path;
     }
 }
