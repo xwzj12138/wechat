@@ -12,6 +12,7 @@ namespace Wechat\Pay;
 
 class WxPayApi
 {
+
     /**
      * 统一下单，WxPayUnifiedOrder中out_trade_no、body、total_fee、trade_type必填
      * appid、mchid、spbill_create_ip、nonce_str不需要填入
@@ -406,28 +407,5 @@ class WxPayApi
             curl_close($ch);
             throw new WxPayException("curl出错，错误码:$error");
         }
-    }
-
-    /**
-     * app支付签名
-     */
-    public function getPayInfo($wxorder)
-    {
-        $array = ['timeStamp'=>(string)time(),'nonceStr'=>self::getNonceStr()];
-        if($wxorder['trade_type']=='APP'){
-            $array['appid'] = $wxorder['appid'];
-            $array['partnerid'] = $wxorder['mch_id'];
-            $array['prepayid'] = $wxorder['prepay_id'];
-            $array['package'] = 'Sign=WXPay';
-        }else{
-            $array['appId'] = $wxorder['appid'];
-            $array['package'] = "prepay_id=".$wxorder['prepay_id'];
-            $array['signType'] = "md5";
-        }
-        $wx_pay_data = new WxPayDataBase();
-        $wx_pay_data->FromArray($array);
-        $sign = $wx_pay_data->MakeSign();
-        $array['paySign'] = $sign;
-        return $array;
     }
 }

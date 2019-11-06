@@ -10,6 +10,7 @@ class WxPayDataBase
 {
     protected $partnerkey;
     protected $values = array();
+
     /**
      * 设置微信分配的公众账号ID
      * @param string $value
@@ -18,6 +19,7 @@ class WxPayDataBase
     {
         $this->values['appid'] = $value;
     }
+
     /**
      * 获取微信分配的公众账号ID的值
      * @return 值
@@ -33,6 +35,22 @@ class WxPayDataBase
     public function IsAppidSet()
     {
         return array_key_exists('appid', $this->values);
+    }
+    /**
+     * 获取微信分配的公众账号ID的值
+     * @return 值
+     **/
+    public function GetPartnerkey()
+    {
+        return $this->partnerkey;
+    }
+    /**
+     * 设置微信分配的公众账号ID
+     * @param string $value
+     **/
+    public function SetPartnerkey($value)
+    {
+        $this->partnerkey = $value;
     }
     /**
      * 设置微信支付分配的商户号
@@ -173,10 +191,12 @@ class WxPayDataBase
 
     /**
      * 生成签名,本函数不覆盖sign成员变量，如要设置签名需要调用SetSign方法赋值
-     * @return 签名
+     * @return string
+     * @throws WxPayException
      */
     public function MakeSign()
     {
+        if(!isset($this->partnerkey)) throw new WxPayException('请设置商户秘钥');
         //签名步骤一：按字典序排序参数
         ksort($this->values);
         $string = $this->ToUrlParams();
@@ -249,5 +269,39 @@ class WxPayDataBase
         }
         $obj->CheckSign();
         return $obj->GetValues();
+    }
+
+    /**
+     * 产生随机字符串，不长于32位
+     * @param int $length
+     * @return 产生的随机字符串
+     */
+    public function getNonceStr($length = 32)
+    {
+        $chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+        $str ="";
+        for ( $i = 0; $i < $length; $i++ )  {
+            $str .= substr($chars, mt_rand(0, strlen($chars)-1), 1);
+        }
+        return $str;
+    }
+
+    /**
+     * app支付签名
+     */
+    public function getPayInfo($wxorder)
+    {
+        $array = [];
+        if($wxorder['trade_type']=='APP'){
+            $array = ['appid'=>$wxorder['appid'],'partnerid'=>$wxorder['mch_id'],'prepayid'=>$wxorder['prepay_id'],
+                'package'=>'Sign=WXPay','noncestr'=>$this->getNonceStr(),'timestamp'=>(string)time()];
+        }else{
+            $array = ['appId'=>$wxorder['appid'],'package'=>"prepay_id=".$wxorder['prepay_id'],'signType'=>'md5',
+                'timeStamp'=>(string)time(),'nonceStr'=>$this->getNonceStr()];
+        }
+        $this->FromArray($array);
+        $sign = $this->MakeSign();
+        $array['paySign'] = $sign;
+        return $array;
     }
 }

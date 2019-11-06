@@ -38,7 +38,7 @@ $inputObj->SetNotify_url('http://');
 $inputObj->SetAppid('vfdsbfdsbfdsdf');
 
 //设置商户号
-$wxorderdata->SetMch_id('vcdsbgffsbfd');
+$inputObj->SetMch_id('vcdsbgffsbfd');
 
 //设置支付价格，单位：分
 $inputObj->SetTotal_fee(5*100);
