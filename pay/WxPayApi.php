@@ -413,12 +413,14 @@ class WxPayApi
      */
     public function getPayInfo($wxorder)
     {
-        $array = ['appId'=>$wxorder['appid'],'timeStamp'=>(string)time(),'nonceStr'=>self::getNonceStr()];
+        $array = ['timeStamp'=>(string)time(),'nonceStr'=>self::getNonceStr()];
         if($wxorder['trade_type']=='APP'){
+            $array['appid'] = $wxorder['appid'];
             $array['partnerid'] = $wxorder['mch_id'];
             $array['prepayid'] = $wxorder['prepay_id'];
             $array['package'] = 'Sign=WXPay';
         }else{
+            $array['appId'] = $wxorder['appid'];
             $array['package'] = "prepay_id=".$wxorder['prepay_id'];
             $array['signType'] = "md5";
         }
