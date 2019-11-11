@@ -346,4 +346,38 @@ class WxPayMicroPay extends WxPayDataBase
     {
         return array_key_exists('auth_code', $this->values);
     }
+
+    /**
+     * 提交被扫支付API
+     * 收银员使用扫码设备读取微信用户刷卡授权码以后，二维码或条码信息传送至商户收银台，
+     * 由商户收银台或者商户后台调用该接口发起支付。
+     * 参数appid、mchid、body、out_trade_no、total_fee、auth_code参数必填
+     * spbill_create_ip、nonce_str不需要填入
+     * @param int $timeOut
+     * @return array
+     * @throws WxPayException
+     */
+    public function micropay($timeOut = 10)
+    {
+        $url = "https://api.mch.weixin.qq.com/pay/micropay";
+        //检测必填参数
+        if(!$this->IsBodySet()) {
+            throw new WxPayException("提交被扫支付API接口中，缺少必填参数body！");
+        } else if(!$this->IsOut_trade_noSet()) {
+            throw new WxPayException("提交被扫支付API接口中，缺少必填参数out_trade_no！");
+        } else if(!$this->IsTotal_feeSet()) {
+            throw new WxPayException("提交被扫支付API接口中，缺少必填参数total_fee！");
+        } else if(!$this->IsAuth_codeSet()) {
+            throw new WxPayException("提交被扫支付API接口中，缺少必填参数auth_code！");
+        }
+
+        $this->SetSpbill_create_ip($_SERVER['REMOTE_ADDR']);//终端ip
+        $this->SetNonce_str($this->getNonceStr());//随机字符串
+
+        $this->SetSign();//签名
+        $xml = $this->ToXml();
+
+        $response = $this->postXmlCurl($xml, $url, $timeOut);
+        return $this->xmlToArray($response);
+    }
 }

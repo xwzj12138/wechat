@@ -65,4 +65,30 @@ class WxPayShortUrl extends WxPayDataBase
     {
         return array_key_exists('nonce_str', $this->values);
     }
+
+    /**
+     *
+     * 转换短链接
+     * 该接口主要用于扫码原生支付模式一中的二维码链接转成短链接(weixin://wxpay/s/XXXXXX)，
+     * 减小二维码数据量，提升扫描速度和精确度。
+     * appid、mchid、spbill_create_ip、nonce_str不需要填入
+     * @param int $timeOut
+     * @throws WxPayException
+     * @return 成功时返回，其他抛异常
+     */
+    public function shorturl($timeOut = 6)
+    {
+        $url = "https://api.mch.weixin.qq.com/tools/shorturl";
+        //检测必填参数
+        if(!$this->IsLong_urlSet()) {
+            throw new WxPayException("需要转换的URL，签名用原串，传输需URL encode！");
+        }
+        $this->SetNonce_str($this->getNonceStr());//随机字符串
+
+        $this->SetSign();//签名
+        $xml = $this->ToXml();
+
+        $response = $this->postXmlCurl($xml, $url,$timeOut);
+        return $this->xmlToArray($response);
+    }
 }

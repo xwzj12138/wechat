@@ -10,8 +10,5 @@ namespace Wechat\Pay;
 
 class WxPayException extends \Exception
 {
-    public function errorMessage()
-    {
-        return $this->getMessage();
-    }
+    protected $code = 704;
 }

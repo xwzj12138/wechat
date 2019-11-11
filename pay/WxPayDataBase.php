@@ -101,11 +101,13 @@ class WxPayDataBase
     {
         return array_key_exists('time_stamp', $this->values);
     }
+
     /**
      * 设置签名，详见签名生成算法
-     * @return string $value
+     * @return string
+     * @throws WxPayException
      */
-    public function SetSign()
+    protected function SetSign()
     {
         $sign = $this->MakeSign();
         $this->values['sign'] = $sign;
@@ -254,7 +256,7 @@ class WxPayDataBase
     }
 
     /**
-     * 将xml转为array
+     * 将xml转为array  no
      * @param $xml
      * @return array
      * @throws WxPayException
@@ -263,12 +265,29 @@ class WxPayDataBase
     {
         $obj = new self();
         $obj->FromXml($xml);
-        //fix bug 2015-06-29
+        //判断是否请求成功，不成功不验证签名，直接返回
         if($obj->values['return_code'] != 'SUCCESS'){
             return $obj->GetValues();
         }
         $obj->CheckSign();
         return $obj->GetValues();
+    }
+
+    /**
+     * 将xml转为array
+     * @param $xml xml数据
+     * @return array 返回数组
+     * @throws WxPayException
+     */
+    public function xmlToArray($xml)
+    {
+        $this->FromXml($xml);
+        //判断是否请求成功，不成功不验证签名，直接返回
+        if($this->values['return_code'] != 'SUCCESS'){
+            return $this->GetValues();
+        }
+        $this->CheckSign();
+        return $this->GetValues();
     }
 
     /**
@@ -287,21 +306,48 @@ class WxPayDataBase
     }
 
     /**
-     * app支付签名
+     * 以post方式提交xml到对应的接口url
+     * @param $xml 需要post的xml数据
+     * @param $url
+     * @param int $second url执行超时时间，默认30s
+     * @return mixed
+     * @throws WxPayException
      */
-    public function getPayInfo($wxorder)
+    protected function postXmlCurl($xml, $url,$second = 30,$sslcert_path=null,$sslkey_path=null)
     {
-        $array = [];
-        if($wxorder['trade_type']=='APP'){
-            $array = ['appid'=>$wxorder['appid'],'partnerid'=>$wxorder['mch_id'],'prepayid'=>$wxorder['prepay_id'],
-                'package'=>'Sign=WXPay','noncestr'=>$this->getNonceStr(),'timestamp'=>(string)time()];
-        }else{
-            $array = ['appId'=>$wxorder['appid'],'package'=>"prepay_id=".$wxorder['prepay_id'],'signType'=>'md5',
-                'timeStamp'=>(string)time(),'nonceStr'=>$this->getNonceStr()];
+        $ch = curl_init();
+        //设置超时
+        curl_setopt($ch, CURLOPT_TIMEOUT, $second);
+
+        curl_setopt($ch,CURLOPT_URL, $url);
+        curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,TRUE);
+        curl_setopt($ch,CURLOPT_SSL_VERIFYHOST,2);//严格校验
+        //设置header
+        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+        //要求结果为字符串且输出到屏幕上
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+
+        if($sslcert_path && $sslkey_path){
+            //设置证书
+            //使用证书：cert 与 key 分别属于两个.pem文件
+            curl_setopt($ch,CURLOPT_SSLCERTTYPE,'PEM');
+            curl_setopt($ch,CURLOPT_SSLCERT, $sslcert_path);
+            curl_setopt($ch,CURLOPT_SSLKEYTYPE,'PEM');
+            curl_setopt($ch,CURLOPT_SSLKEY, $sslkey_path);
         }
-        $this->FromArray($array);
-        $sign = $this->MakeSign();
-        $array['paySign'] = $sign;
-        return $array;
+        //post提交方式
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
+        //运行curl
+        $data = curl_exec($ch);
+        //返回结果
+        if($data){
+            curl_close($ch);
+            return $data;
+        } else {
+            $error = curl_errno($ch);
+            curl_close($ch);
+            throw new WxPayException("curl出错，错误码:$error");
+        }
     }
 }

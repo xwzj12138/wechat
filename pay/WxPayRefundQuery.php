@@ -10,59 +10,6 @@ namespace Wechat\Pay;
 
 class WxPayRefundQuery extends WxPayDataBase
 {
-
-    /**
-     * 设置微信分配的公众账号ID
-     * @param string $value
-     **/
-    public function SetAppid($value)
-    {
-        $this->values['appid'] = $value;
-    }
-    /**
-     * 获取微信分配的公众账号ID的值
-     * @return 值
-     **/
-    public function GetAppid()
-    {
-        return $this->values['appid'];
-    }
-    /**
-     * 判断微信分配的公众账号ID是否存在
-     * @return true 或 false
-     **/
-    public function IsAppidSet()
-    {
-        return array_key_exists('appid', $this->values);
-    }
-
-
-    /**
-     * 设置微信支付分配的商户号
-     * @param string $value
-     **/
-    public function SetMch_id($value)
-    {
-        $this->values['mch_id'] = $value;
-    }
-    /**
-     * 获取微信支付分配的商户号的值
-     * @return 值
-     **/
-    public function GetMch_id()
-    {
-        return $this->values['mch_id'];
-    }
-    /**
-     * 判断微信支付分配的商户号是否存在
-     * @return true 或 false
-     **/
-    public function IsMch_idSet()
-    {
-        return array_key_exists('mch_id', $this->values);
-    }
-
-
     /**
      * 设置微信支付分配的终端设备号
      * @param string $value
@@ -215,5 +162,35 @@ class WxPayRefundQuery extends WxPayDataBase
     public function IsRefund_idSet()
     {
         return array_key_exists('refund_id', $this->values);
+    }
+
+    /**
+     *
+     * 查询退款
+     * 提交退款申请后，通过调用该接口查询退款状态。退款有一定延时，
+     * 用零钱支付的退款20分钟内到账，银行卡支付的退款3个工作日后重新查询退款状态。
+     * WxPayRefundQuery中out_refund_no、out_trade_no、transaction_id、refund_id四个参数必填一个
+     * appid、mchid、spbill_create_ip、nonce_str不需要填入
+     * @param WxPayRefundQuery $inputObj
+     * @param int $timeOut
+     * @throws WxPayException
+     * @return 成功时返回，其他抛异常
+     */
+    public function refundQuery($timeOut = 6)
+    {
+        $url = "https://api.mch.weixin.qq.com/pay/refundquery";
+        //检测必填参数
+        if(!$this->IsOut_refund_noSet() &&
+            !$this->IsOut_trade_noSet() &&
+            !$this->IsTransaction_idSet() &&
+            !$this->IsRefund_idSet()) {
+            throw new WxPayException("退款查询接口中，out_refund_no、out_trade_no、transaction_id、refund_id四个参数必填一个！");
+        }
+        $this->SetNonce_str($this->getNonceStr());//随机字符串
+
+        $this->SetSign();//签名
+        $xml = $this->ToXml();
+        $response = $this->postXmlCurl($xml, $url, $timeOut);
+        return $this->xmlToArray($response);
     }
 }

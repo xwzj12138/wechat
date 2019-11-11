@@ -420,4 +420,67 @@ class WxPayUnifiedOrder extends WxPayDataBase
     {
         return array_key_exists('openid', $this->values);
     }
+
+    /**
+     * 统一下单，out_trade_no、body、total_fee、trade_type,appid,mch_id必填 spbill_create_ip、nonce_str不需要填入
+     * @param int $timeOut
+     * @throws WxPayException
+     * @return 成功时返回，其他抛异常
+     */
+    public function unifiedOrder($timeOut = 6)
+    {
+        $url = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+        //检测必填参数
+        if(!$this->IsOut_trade_noSet()) {
+            throw new WxPayException('缺少统一支付接口必填参数out_trade_no！');
+        }else if(!$this->IsBodySet()){
+            throw new WxPayException('缺少统一支付接口必填参数body！');
+        }else if(!$this->IsTotal_feeSet()) {
+            throw new WxPayException('缺少统一支付接口必填参数total_fee！');
+        }else if(!$this->IsTrade_typeSet()) {
+            throw new WxPayException('缺少统一支付接口必填参数trade_type！');
+        }
+
+        //关联参数
+        if($this->GetTrade_type() == "JSAPI" && !$this->IsOpenidSet()){
+            throw new WxPayException("统一支付接口中，缺少必填参数openid！trade_type为JSAPI时，openid为必填参数！");
+        }
+        if($this->GetTrade_type() == "NATIVE" && !$this->IsProduct_idSet()){
+            throw new WxPayException("统一支付接口中，缺少必填参数product_id！trade_type为NATIVE时，product_id为必填参数！");
+        }
+        if(!$this->IsAppidSet()){
+            throw new WxPayException('APPID不能为空');
+        }
+        if(!$this->IsMch_idSet()){
+            throw new WxPayException('商户号不能为空');
+        }
+
+        $this->SetSpbill_create_ip($_SERVER['REMOTE_ADDR']);//终端ip
+        $this->SetNonce_str($this->getNonceStr());//随机字符串
+
+        //签名
+        $this->SetSign();
+        $xml = $this->ToXml();
+        $response = $this->postXmlCurl($xml,$url,$timeOut);
+        return $this->xmlToArray($response);
+    }
+
+    /**
+     * app支付签名
+     */
+    public function getPayInfo($wxorder)
+    {
+        $array = [];
+        if($wxorder['trade_type']=='APP'){
+            $array = ['appid'=>$wxorder['appid'],'partnerid'=>$wxorder['mch_id'],'prepayid'=>$wxorder['prepay_id'],
+                'package'=>'Sign=WXPay','noncestr'=>$this->getNonceStr(),'timestamp'=>(string)time()];
+        }else{
+            $array = ['appId'=>$wxorder['appid'],'package'=>"prepay_id=".$wxorder['prepay_id'],'signType'=>'md5',
+                'timeStamp'=>(string)time(),'nonceStr'=>$this->getNonceStr()];
+        }
+        $this->FromArray($array);
+        $sign = $this->MakeSign();
+        $array['paySign'] = $sign;
+        return $array;
+    }
 }

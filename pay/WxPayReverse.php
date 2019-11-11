@@ -125,4 +125,31 @@ class WxPayReverse extends WxPayDataBase
     {
         return $this->sslkey_path;
     }
+
+    /**
+     * 撤销订单API接口，参数appid、mchid、out_trade_no和transaction_id必须填写一个
+     * spbill_create_ip、nonce_str不需要填入
+     * @param $inputObj
+     * @param int $timeOut
+     * @return array
+     * @throws WxPayException
+     */
+    public function reverse($timeOut = 6)
+    {
+        $url = "https://api.mch.weixin.qq.com/secapi/pay/reverse";
+        //检测必填参数
+        if(!$this->IsOut_trade_noSet() && !$this->IsTransaction_idSet()) {
+            throw new WxPayException("撤销订单API接口中，参数out_trade_no和transaction_id必须填写一个！");
+        }
+        if($this->GetSslkey_path()==null || $this->GetSslcert_path()==null){
+            throw new WxPayException("该接口必须使用api证书，请设置api证书文件路径");
+        }
+        $this->SetNonce_str($this->getNonceStr());//随机字符串
+
+        $this->SetSign();//签名
+        $xml = $this->ToXml();
+
+        $response = $this->postXmlCurl($xml, $url, $timeOut,$this->GetSslcert_path(),$this->GetSslkey_path());
+        return $this->xmlToArray($response);
+    }
 }

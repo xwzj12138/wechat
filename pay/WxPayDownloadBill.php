@@ -112,4 +112,31 @@ class WxPayDownloadBill extends WxPayDataBase
     {
         return array_key_exists('bill_type', $this->values);
     }
+
+    /**
+     * 下载对账单，参数appid、mchid、bill_date为必填参数
+     * spbill_create_ip、nonce_str不需要填入
+     * @param WxPayDownloadBill $inputObj
+     * @param int $timeOut
+     * @throws WxPayException
+     * @return 成功时返回，其他抛异常
+     */
+    public function downloadBill($timeOut = 6)
+    {
+        $url = "https://api.mch.weixin.qq.com/pay/downloadbill";
+        //检测必填参数
+        if(!$this->IsBill_dateSet()) {
+            throw new WxPayException("对账单接口中，缺少必填参数bill_date！");
+        }
+        $this->SetNonce_str($this->getNonceStr());//随机字符串
+
+        $this->SetSign();//签名
+        $xml = $this->ToXml();
+
+        $response = $this->postXmlCurl($xml, $url, $timeOut);
+        if(substr($response, 0 , 5) == "<xml>"){
+            return "";
+        }
+        return $response;
+    }
 }

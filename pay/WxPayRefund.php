@@ -15,57 +15,6 @@ class WxPayRefund extends WxPayDataBase
     protected $sslcert_path;
     //api证书私钥
     protected $sslkey_path;
-    /**
-     * 设置微信分配的公众账号ID
-     * @param string $value
-     **/
-    public function SetAppid($value)
-    {
-        $this->values['appid'] = $value;
-    }
-    /**
-     * 获取微信分配的公众账号ID的值
-     * @return 值
-     **/
-    public function GetAppid()
-    {
-        return $this->values['appid'];
-    }
-    /**
-     * 判断微信分配的公众账号ID是否存在
-     * @return true 或 false
-     **/
-    public function IsAppidSet()
-    {
-        return array_key_exists('appid', $this->values);
-    }
-
-
-    /**
-     * 设置微信支付分配的商户号
-     * @param string $value
-     **/
-    public function SetMch_id($value)
-    {
-        $this->values['mch_id'] = $value;
-    }
-    /**
-     * 获取微信支付分配的商户号的值
-     * @return 值
-     **/
-    public function GetMch_id()
-    {
-        return $this->values['mch_id'];
-    }
-    /**
-     * 判断微信支付分配的商户号是否存在
-     * @return true 或 false
-     **/
-    public function IsMch_idSet()
-    {
-        return array_key_exists('mch_id', $this->values);
-    }
-
 
     /**
      * 设置微信支付分配的终端设备号，与下单一致
@@ -331,5 +280,41 @@ class WxPayRefund extends WxPayDataBase
     public function GetSslkey_path()
     {
         return $this->sslkey_path;
+    }
+
+    /**
+     *
+     * 申请退款，WxPayRefund中out_trade_no、transaction_id至少填一个且
+     * out_refund_no、total_fee、refund_fee、op_user_id为必填参数
+     * appid、mchid、spbill_create_ip、nonce_str不需要填入
+     * @param WxPayRefund $inputObj
+     * @param int $timeOut
+     * @throws WxPayException
+     * @return 成功时返回，其他抛异常
+     */
+    public function refund($timeOut = 6)
+    {
+        $url = "https://api.mch.weixin.qq.com/secapi/pay/refund";
+        //检测必填参数
+        if(!$this->IsOut_trade_noSet() && !$this->IsTransaction_idSet()) {
+            throw new WxPayException("退款申请接口中，out_trade_no、transaction_id至少填一个！");
+        }else if(!$this->IsOut_refund_noSet()){
+            throw new WxPayException("退款申请接口中，缺少必填参数out_refund_no！");
+        }else if(!$this->IsTotal_feeSet()){
+            throw new WxPayException("退款申请接口中，缺少必填参数total_fee！");
+        }else if(!$this->IsRefund_feeSet()){
+            throw new WxPayException("退款申请接口中，缺少必填参数refund_fee！");
+        }else if(!$this->IsOp_user_idSet()){
+            throw new WxPayException("退款申请接口中，缺少必填参数op_user_id！");
+        }
+        if($this->GetSslkey_path()==null || $this->GetSslcert_path()==null){
+            throw new WxPayException("该接口必须使用api证书，请设置api证书文件路径");
+        }
+        $this->SetNonce_str($this->getNonceStr());//随机字符串
+
+        $this->SetSign();//签名
+        $xml = $this->ToXml();
+        $response = $this->postXmlCurl($xml, $url, $timeOut,$this->GetSslcert_path(),$this->GetSslkey_path());
+        return $this->xmlToArray($response);
     }
 }
