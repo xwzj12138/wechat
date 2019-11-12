@@ -203,6 +203,9 @@ echo \Wechat\Weapp\EventPush::getData('111111',function ($push_data){
 
 > 所有代码api都可以在examples目录中查看
 
+----
+## 目录接口
+
 ~~~
 wechat  SDK根目录
 ├─curl           curl封装代码目录
