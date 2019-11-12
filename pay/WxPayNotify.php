@@ -1,9 +1,8 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Administrator
- * Date: 2019/5/25
- * Time: 12:34
+ * Notes: 支付回调通知
+ * Date: 2019/11/1
+ * @author: 陈星星
  */
 
 namespace Wechat\Pay;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Notes: 小程序数据类
+ * Notes: 数据基类
  * Date: 2019/11/11
  * @author: 陈星星
  */
@@ -45,39 +45,4 @@ class WeAppData
         }
         return $data;
     }
-
-    /**
-     * 获取用户信息
-     * @param $code 用户登录授权的code，wx.login()返回的code
-     * @return mixed 返回用户信息
-     * ['openid'=>'用户唯一标识','session_key'=>'会话密钥','errcode'=>'错误码','errmsg'=>'错误信息',
-     * 'unionid'=>'用户在开放平台的唯一标识符，在满足 UnionID 下发条件的情况下会返回'
-     * ]
-     * @throws WeAppException
-     */
-    public function getUserInfo($code)
-    {
-        $url = $this->domain.'sns/jscode2session?appid='.$this->appid.'&secret='.$this->appSecret.'&js_code='.$code.'&grant_type=authorization_code';
-        $data = Request::curl_request($url);
-        if(!empty($data['errcode'])){
-            throw new WeAppException($data['errmsg']);
-        }
-        return $data;
-    }
-
-    /**
-     * 获取接口权限值access_token
-     * @return mixed
-     * @throws WeAppException
-     */
-    public function getAccessToken()
-    {
-        $url = $this->domain.'cgi-bin/token?grant_type=client_credential&appid='.$this->appid.'&secret='.$this->appSecret;
-        $data = Request::curl_request($url);
-        if(!empty($data['errcode'])){
-            throw new WeAppException($data['errmsg']);
-        }
-        return $data;
-    }
-
 }

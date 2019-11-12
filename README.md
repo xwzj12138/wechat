@@ -143,3 +143,99 @@ $qr_code_content = $inputObj->bizpayurl();
 //生成二维码,可以使用QRCode生成二维码在保存在本地。前端使用二维码url访问即可
 
 ```
+
+## 事件推送相关
+
+```php
+
+//tp或其他框架可以直接在控制器中使用，无需引入自动加载类
+require_once '../vendor/autoload.php';
+
+//tp5以上可以直接return即可，其他框架可以根据框架需求返回
+echo \Wechat\Weapp\EventPush::getData('111111',function ($push_data){
+    switch (strtolower($push_data['MsgType'])){
+        case 'event':
+            switch (strtolower($push_data['Event'])){
+                case 'subscribe':
+                    //关注关注事件，这里分为直接关注事件和扫描带参数二维码事件,还未关注时的事件推送
+                    return (new \Wechat\Weapp\SendEventPushMsg())->text('欢迎关注公众号');
+                    break;
+                case 'unsubscribe':
+                    //取消关注事件
+                    break;
+                case 'SCAN':
+                    //扫描带参数二维码事件,用户已关注时的事件推送
+                    break;
+                case 'LOCATION':
+                    //上报地理位置事件
+                    break;
+                case 'CLICK':
+                    //自定义菜单事件
+                    break;
+            }
+            break;
+        case 'text':
+            //文本消息
+            break;
+        case 'image':
+            //图片消息
+            break;
+        case 'voice':
+            //语音消息
+            break;
+        case 'video':
+            //视频消息
+            break;
+        case 'shortvideo':
+            //小视频消息
+            break;
+        case 'location':
+            //地理位置消息
+            break;
+        case 'link':
+            //链接消息
+            break;
+    }
+});
+```
+
+*****
+
+> 所有代码api都可以在examples目录中查看
+
+~~~
+wechat  SDK根目录
+├─curl           curl封装代码目录
+│  ├─Request             请求类
+│
+├─examples                  示例代码目录
+│  ├─BizPayUrl.php          扫码支付模式一示例代码
+│  ├─PayNotify.php          微信支付回调通知示例代码
+│  └─PayUnifiedOrder        微信支付示例代码
+│  └─Refund                 退款示例代码
+│  └─WxEventPush            微信事件推送
+│
+├─pay                        支付相关代码目录
+│  ├─WxPayBizPayUrl.php     扫码支付模式一生成二维码参数
+│  ├─WxPayCloseOrder.php    关闭订单输入对象
+│  └─WxPayDataBase          基础数据类
+│  └─WxPayDownloadBill      下载对账单输入对象
+│  └─WxPayException         微信异常处理
+│  └─WxPayMicroPay          提交被扫输入对象
+│  └─WxPayNotify            支付回调通知
+│  └─WxPayOrderQuery        订单查询
+│  └─WxPayRefund            提交退款
+│  └─WxPayRefundQuery       退款查询
+│  └─WxPayReverse           撤销输入
+│  └─WxPayShortUrl          短链转换
+│  └─WxPayUnifiedOrder      统一下单输入对象
+│
+├─weapp                      公众号及小程序相关SDK
+│  ├─EventPush.php          微信公众号事件推送类
+│  ├─SendEventPushMsg.php   消息推送信息返回格式化类
+│  └─WeAppData              数据基类
+│  └─WeAppException         微信异常处理
+│  └─WxTemplate             模板消息相关
+│  └─WxUser                 微信用户相关
+│
+~~~
