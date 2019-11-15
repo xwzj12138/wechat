@@ -11,8 +11,6 @@ namespace Wechat\Weapp;
 
 class WxTemplate extends WeAppData
 {
-    //请求的域名
-    const domain = 'https://api.weixin.qq.com/';
 
     /**
      * 设置行业可在微信公众平台后台完成，每月可修改行业1次
@@ -21,10 +19,10 @@ class WxTemplate extends WeAppData
      * @return mixed
      * @throws WeAppException
      */
-    public static function setIndustry($access_token,$industry_id1)
+    public function setIndustry($access_token,$industry_id1)
     {
-        $url = self::domain.'cgi-bin/template/api_set_industry?access_token='.$access_token;
-        return self::getData($url,['industry_id1'=>$industry_id1]);
+        $url = $this->domain.'cgi-bin/template/api_set_industry?access_token='.$access_token;
+        return $this->getData($url,['industry_id1'=>$industry_id1]);
     }
 
     /**
@@ -33,10 +31,10 @@ class WxTemplate extends WeAppData
      * @return mixed
      * @throws WeAppException
      */
-    public static function getIndustry($access_token)
+    public function getIndustry($access_token)
     {
-        $url = self::domain.'cgi-bin/template/get_industry?access_token='.$access_token;
-        return self::getData($url);
+        $url = $this->domain.'cgi-bin/template/get_industry?access_token='.$access_token;
+        return $this->getData($url);
     }
 
     /**
@@ -46,10 +44,10 @@ class WxTemplate extends WeAppData
      * @return mixed
      * @throws WeAppException
      */
-    public static function getTemplateId($template_id_short,$access_token)
+    public function getTemplateId($template_id_short,$access_token)
     {
-        $url = self::domain.'cgi-bin/template/api_add_template?access_token='.$access_token;
-        return self::getData($url,['template_id_short'=>$template_id_short]);
+        $url = $this->domain.'cgi-bin/template/api_add_template?access_token='.$access_token;
+        return $this->getData($url,['template_id_short'=>$template_id_short]);
     }
 
     /**
@@ -58,10 +56,10 @@ class WxTemplate extends WeAppData
      * @return mixed
      * @throws WeAppException
      */
-    public static function getPrivateTemplate($access_token)
+    public function getPrivateTemplate($access_token)
     {
-        $url = self::domain.'cgi-bin/template/get_all_private_template?access_token='.$access_token;
-        return self::getData($url);
+        $url = $this->domain.'cgi-bin/template/get_all_private_template?access_token='.$access_token;
+        return $this->getData($url);
     }
     /**
      * 删除模板
@@ -70,10 +68,10 @@ class WxTemplate extends WeAppData
      * @return mixed
      * @throws WeAppException
      */
-    public static function delete($template_id,$access_token)
+    public function delete($template_id,$access_token)
     {
-        $url = self::domain.'cgi-bin/template/del_private_template?access_token='.$access_token;
-        return self::getData($url,['template_id'=>$template_id]);
+        $url = $this->domain.'cgi-bin/template/del_private_template?access_token='.$access_token;
+        return $this->getData($url,['template_id'=>$template_id]);
     }
 
     /**
@@ -87,7 +85,7 @@ class WxTemplate extends WeAppData
     public function send($post,$access_token)
     {
         //检测公众号消息参数验证
-        if(empty($post['appid'])){
+        if(empty($this->appid)){
             throw new WeAppException('公众号唯一标识不能为空');
         }elseif (empty($post['openid'])){
             throw new WeAppException('openid不能为空');
@@ -104,6 +102,7 @@ class WxTemplate extends WeAppData
                 throw new WeAppException('所要跳转的小程序pagepath不能为空');
             }
         }
+        $post['appid'] = $this->appid;
 
         $url = $this->domain.'cgi-bin/message/template/send?access_token='.$access_token;
         return $this->getData($url,$post);

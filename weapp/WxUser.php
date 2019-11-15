@@ -66,6 +66,6 @@ class WxUser extends WeAppData
     public function getAccessToken()
     {
         $url = $this->domain.'cgi-bin/token?grant_type=client_credential&appid='.$this->appid.'&secret='.$this->appSecret;
-        return WeAppData::getData($url);
+        return $this->getData($url);
     }
 }

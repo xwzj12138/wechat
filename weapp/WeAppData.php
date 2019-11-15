@@ -21,13 +21,16 @@ class WeAppData
 
     /**
      * WeAppData constructor.
-     * @param $appid 小程序唯一标识
-     * @param $appSecret 小程序秘钥
+     * @param $config 配置列表
      */
-    public function __construct($appid,$appSecret)
+    public function __construct($config=[])
     {
-        $this->appid = $appid;
-        $this->appSecret = $appSecret;
+        if(!isset($config['appid'])){
+            $this->appid = $config['appid'];
+        }
+        if(!isset($config['appSecret'])){
+            $this->appSecret = $config['appSecret'];
+        }
     }
 
     /**
@@ -37,7 +40,7 @@ class WeAppData
      * @return mixed
      * @throws WeAppException
      */
-    public static function getData($url,$post=null)
+    public function getData($url,$post=null)
     {
         $data = Request::curl_request($url,$post);
         if($data['errcode']!=0){
