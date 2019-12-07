@@ -33,7 +33,7 @@ class WxPayNotify extends WxPayDataBase
         try {
             $result = $baseObj->xmlToArray($xml);
             call_user_func($callback, $result);
-        } catch (WxPayException $e){
+        } catch (\Exception $e){
             $baseObj->return_code = 'FAIL';
             $baseObj->return_msg = $e->getMessage();
         }
