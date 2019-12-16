@@ -7,7 +7,7 @@
 
 require_once '../vendor/autoload.php';
 
-//tp5以上可以直接return即可，其他框架可以根据框架需求返回
+
 echo \Wechat\Weapp\EventPush::getData('111111',function ($push_data){
     switch (strtolower($push_data['MsgType'])){
         case 'event':

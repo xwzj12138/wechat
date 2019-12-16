@@ -151,7 +151,7 @@ $qr_code_content = $inputObj->bizpayurl();
 //tp或其他框架可以直接在控制器中使用，无需引入自动加载类
 require_once '../vendor/autoload.php';
 
-//tp5以上可以直接return即可，其他框架可以根据框架需求返回
+
 echo \Wechat\Weapp\EventPush::getData('111111',function ($push_data){
     switch (strtolower($push_data['MsgType'])){
         case 'event':

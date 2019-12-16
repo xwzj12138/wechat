@@ -18,9 +18,9 @@ class EventPush
      */
     public static function getData($token,$callback)
     {
-        if(empty($_GET['signature'])) return false;
-        if(empty($_GET['timestamp'])) return false;
-        if(empty($_GET['nonce'])) return false;
+        if(empty($_GET['signature'])) return 'success';
+        if(empty($_GET['timestamp'])) return 'success';
+        if(empty($_GET['nonce'])) return 'success';
         $tmpArray = array($token,$_GET['timestamp'],$_GET['nonce']);
         sort($tmpArray);
         $tmpstr = implode($tmpArray);
@@ -34,7 +34,7 @@ class EventPush
             $push_data = self::xmlToArray();
             return call_user_func($callback, $push_data);
         }
-        return false;
+        return 'success';
     }
 
     /**
