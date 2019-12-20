@@ -8,9 +8,9 @@
 require_once "../vendor/autoload.php";
 
 try{
-    $wxuser = new \Wechat\Weapp\WxUser(['appid'=>'43214321432143','appSecret'=>'fdsbvfdbfdsbhgfngfbv']);
+    $wxuser = new \Wechat\Weapp\WxUser(['appid'=>'wxea2586a42af671d8','appSecret'=>'c67a3ec60bad199a5102c5e88a4cbd2b']);
 
-    $data = $wxuser->getWeAppAuthInfo('0438HveO1T78H91RA4cO1XLmeO18Hvef');
+    $data = $wxuser->getWeAppAuthInfo('0438qGMX1ynN901KGRPX1HdBMX18qGM5');
 }catch (Exception $e){
     echo '错误状态码:'.$e->getCode().PHP_EOL;
     echo '错误文件:'.$e->getFile().PHP_EOL;

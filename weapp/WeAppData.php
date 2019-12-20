@@ -25,10 +25,10 @@ class WeAppData
      */
     public function __construct($config=[])
     {
-        if(!isset($config['appid'])){
+        if(isset($config['appid'])){
             $this->appid = $config['appid'];
         }
-        if(!isset($config['appSecret'])){
+        if(isset($config['appSecret'])){
             $this->appSecret = $config['appSecret'];
         }
     }
