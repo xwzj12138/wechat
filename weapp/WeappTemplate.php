@@ -8,7 +8,7 @@
 namespace Wechat\Weapp;
 
 
-use Wechat\curl\Request;
+use Wechat\Curl\Request;
 
 class WeappTemplate extends WeAppData
 {

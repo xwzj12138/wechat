@@ -8,7 +8,7 @@
 namespace Wechat\Lbs;
 
 
-use Wechat\curl\Request;
+use Wechat\Curl\Request;
 use Wechat\Weapp\WeAppException;
 
 class Lbs

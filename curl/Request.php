@@ -5,7 +5,7 @@
  * @author: 陈星星
  */
 
-namespace Wechat\curl;
+namespace Wechat\Curl;
 
 class Request
 {

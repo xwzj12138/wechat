@@ -22,6 +22,7 @@
     },
     "autoload":{
         "psr-4":{
+            "Wechat\\Curl\\":"curl/",
             "Wechat\\Pay\\":"pay/",
             "Wechat\\Weapp\\":"weapp/",
             "Wechat\\Lbs\\":"lbs/"
