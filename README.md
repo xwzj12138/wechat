@@ -198,7 +198,20 @@ echo \Wechat\Weapp\EventPush::getData('111111',function ($push_data){
     }
 });
 ```
+### 小程序用户信息相关
+```php
+//实例化用户信息类
+$wxuser = new WxUser(['appid'=>'小程序唯一标识','appSecret'=>'小程序秘钥']);
+//小程序授权获取用户信息
+//code:  wx.login()返回的code码
+return $wxuser->getWeAppAuthInfo($code);
 
+//获取access_token
+$wxuser->getAccessToken();
+
+//发送模板消息
+
+```
 *****
 
 > 所有代码api都可以在examples目录中查看

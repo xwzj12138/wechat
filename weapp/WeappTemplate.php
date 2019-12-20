@@ -1,6 +1,6 @@
 <?php
 /**
- * Notes:
+ * Notes:订阅模板消息类
  * Date: 2019/12/16
  * @author: 陈星星
  */
@@ -8,10 +8,12 @@
 namespace Wechat\Weapp;
 
 
+use Wechat\curl\Request;
+
 class WeappTemplate extends WeAppData
 {
     /**
-     * 添加模板消息
+     * 添加订阅模板消息
      * @param $access_token 接口权限值
      * @param $tid 模板标题 id，可通过接口获取，也可登录小程序后台查看获取
      * @param $kidList 开发者自行组合好的模板关键词列表，关键词顺序可以自由搭配
@@ -27,7 +29,7 @@ class WeappTemplate extends WeAppData
     }
 
     /**
-     * 删除模板
+     * 删除订阅模板
      * @param $access_token 接口权限值
      * @param $priTmplId 模板id
      * @return mixed
@@ -106,6 +108,6 @@ class WeappTemplate extends WeAppData
             throw new WeAppException('公众号模板消息的数据不能为空');
         }
         $url = $this->domain.'cgi-bin/message/subscribe/send?access_token='.$access_token;
-        return $this->getData($url,$post);
+        return Request::curl_request($url,$post);
     }
 }

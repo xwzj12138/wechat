@@ -43,6 +43,7 @@ class WeAppData
     public function getData($url,$post=null)
     {
         $data = Request::curl_request($url,$post);
+        $data = json_decode($data,true);
         if($data['errcode']!=0){
             throw new WeAppException($data['errmsg']);
         }

@@ -68,4 +68,29 @@ class WxUser extends WeAppData
         $url = $this->domain.'cgi-bin/token?grant_type=client_credential&appid='.$this->appid.'&secret='.$this->appSecret;
         return $this->getData($url);
     }
+
+    /**
+     * 获取开放平台接口权限值
+     * @param $code 授权码
+     * @return mixed
+     * @throws WeAppException
+     */
+    public function getOpenPlatformToekn($code)
+    {
+        $url = $this->domain.'sns/oauth2/access_toke?grant_type=authorization_code&appid='.$this->appid.'&secret='.$this->appSecret.'&code='.$code;
+        return $this->getData($url);
+    }
+
+    /**
+     * 开放平台接口获取用户信息
+     * @param $accessToken 接口权限值
+     * @param $openid 用户在开放平台的唯一标识
+     * @return mixed
+     * @throws WeAppException
+     */
+    public function getOpenPlatformUserInfo($accessToken,$openid)
+    {
+        $url = $this->domain.'sns/userinfo?access_token='.$accessToken.'&openid='.$openid;
+        return $this->getData($url);
+    }
 }
