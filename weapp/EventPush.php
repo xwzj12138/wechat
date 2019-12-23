@@ -22,7 +22,7 @@ class EventPush
         if(empty($_GET['timestamp'])) return 'success';
         if(empty($_GET['nonce'])) return 'success';
         $tmpArray = array($token,$_GET['timestamp'],$_GET['nonce']);
-        sort($tmpArray);
+        sort($tmpArray,SORT_STRING);
         $tmpstr = implode($tmpArray);
         $tmpstr = sha1($tmpstr);
         //初次验证签名，直接返回随机字符串echostr
