@@ -24,20 +24,19 @@ class WxPayNotify extends WxPayDataBase
      * 回调类成员函数方法:notify(array($this, you_function));
      * @return bool|mixed
      */
-    public static function notify($callback)
+    public function notify($callback)
     {
         //获取通知的数据
         $xml = file_get_contents('php://input');
-        $baseObj = new self();
         //如果返回成功则验证签名
         try {
-            $result = $baseObj->xmlToArray($xml);
+            $result = $this->xmlToArray($xml);
             call_user_func($callback, $result);
         } catch (\Exception $e){
-            $baseObj->return_code = 'FAIL';
-            $baseObj->return_msg = $e->getMessage();
+            $this->return_code = 'FAIL';
+            $this->return_msg = $e->getMessage();
         }
-        return $baseObj->returnData();
+        return $this->returnData();
     }
 
     /**
@@ -46,7 +45,7 @@ class WxPayNotify extends WxPayDataBase
     public function Handle()
     {
         //获取通知的数据
-        WxPayNotify::notify(array($this,'NotifyProcess'));
+        $this->notify(array($this,'NotifyProcess'));
         return $this->GetValues();
     }
 

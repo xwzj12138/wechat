@@ -100,7 +100,7 @@ class WeappTemplate extends WeAppData
      */
     public function sendSubscribeMessage($access_token,$post)
     {
-        if (empty($post['openid'])){
+        if (empty($post['touser'])){
             throw new WeAppException('openid不能为空');
         }elseif (empty($post['template_id'])){
             throw new WeAppException('模板id不能为空');
@@ -108,6 +108,7 @@ class WeappTemplate extends WeAppData
             throw new WeAppException('公众号模板消息的数据不能为空');
         }
         $url = $this->domain.'cgi-bin/message/subscribe/send?access_token='.$access_token;
-        return Request::curl_request($url,$post);
+        $wx_data = Request::curl_request($url,$post);
+        return json_decode($wx_data,true);
     }
 }

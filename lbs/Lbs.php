@@ -34,6 +34,7 @@ class Lbs
     public function base($url,$param=null)
     {
         $data = Request::curl_request($url,$param);
+        $data = json_decode($data,true);
         if($data['status']!=0){
             throw new WeAppException($data['message']);
         }
