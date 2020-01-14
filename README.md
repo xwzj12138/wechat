@@ -22,7 +22,9 @@ use Wechat\Pay\WxPayException;
 
 //实际使用时，可以根据需求捕获异常信息
 try{
-    $inputObj = new WxPayUnifiedOrder();
+    //配置商户秘钥
+    $config = ['partnerkey'=>'支付秘钥，用于签名验证'];
+    $inputObj = new WxPayUnifiedOrder($config);
     //支付类型：JSAPI，NATIVE，APP，
     $inputObj->SetTrade_type('APP');
 
@@ -76,7 +78,9 @@ try{
 //tp或其他框架可以直接在控制器中使用，无需引入自动加载类
 require_once '../vendor/autoload.php';
 
-$pay_notify = new \Wechat\Pay\WxPayNotify();
+$config = ['partnerkey'=>'支付秘钥，用于签名验证','appid'=>'微信应用的唯一标识appid'];
+
+$pay_notify = new \Wechat\Pay\WxPayNotify($config);
 
 $pay_notify->SetPartnerkey('支付秘钥，用于签名验证');
 
@@ -89,6 +93,7 @@ return $pay_notify->notify(function ($result){
 //处理回调方式二
 class Notify extends \Wechat\Pay\WxPayNotify
 {
+    protected $partnerkey = '支付秘钥';
     public function NotifyProcess($data)
     {
         //处理支付通知
@@ -103,7 +108,7 @@ class Notify extends \Wechat\Pay\WxPayNotify
 //tp或其他框架可以直接在控制器中使用，无需引入自动加载类
 require_once '../vendor/autoload.php';
 
-$inputObj = new \Wechat\Pay\WxPayRefund();
+$inputObj = new \Wechat\Pay\WxPayRefund(['partnerkey'=>'支付秘钥，用于签名验证']);
 
 //商户订单号，微信支付订单号两者至少要有一个
 $inputObj->SetOut_trade_no('退款订单对应的订单号');
@@ -130,7 +135,7 @@ $data = $inputObj->refund();
 //tp或其他框架可以直接在控制器中使用，无需引入自动加载类
 require_once '../vendor/autoload.php';
 
-$inputObj = new \Wechat\Pay\WxPayBizPayUrl();
+$inputObj = new \Wechat\Pay\WxPayBizPayUrl(['partnerkey'=>'支付秘钥，用于签名验证']);
 
 $inputObj->SetAppid('应用的唯一标识');
 
@@ -150,6 +155,7 @@ $qr_code_content = $inputObj->bizpayurl();
 ## 事件推送相关
 
 ```php
+<?php
 
 //tp或其他框架可以直接在控制器中使用，无需引入自动加载类
 require_once '../vendor/autoload.php';
@@ -203,6 +209,7 @@ echo \Wechat\Weapp\EventPush::getData('111111',function ($push_data){
 ```
 ### 小程序用户信息相关
 ```php
+
 //实例化用户信息类
 $wxuser = new WxUser(['appid'=>'小程序唯一标识','appSecret'=>'小程序秘钥']);
 //小程序授权获取用户信息

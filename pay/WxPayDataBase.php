@@ -11,6 +11,13 @@ class WxPayDataBase
     protected $partnerkey;
     protected $values = array();
 
+    public function __construct($config)
+    {
+        if(empty($config['partnerkey'])) throw new WxPayException('请配置商户秘钥：partnerkey');
+        $this->partnerkey = $config['partnerkey'];
+        if(isset($config['appid'])) $this->SetAppid($config['appid']);
+    }
+
     /**
      * 设置微信分配的公众账号ID
      * @param string $value
@@ -43,14 +50,6 @@ class WxPayDataBase
     public function GetPartnerkey()
     {
         return $this->partnerkey;
-    }
-    /**
-     * 设置微信分配的公众账号ID
-     * @param string $value
-     **/
-    public function SetPartnerkey($value)
-    {
-        $this->partnerkey = $value;
     }
     /**
      * 设置微信支付分配的商户号

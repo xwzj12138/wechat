@@ -7,7 +7,7 @@
 
 require_once '../vendor/autoload.php';
 
-$inputObj = new \Wechat\Pay\WxPayRefund();
+$inputObj = new \Wechat\Pay\WxPayRefund(['partnerkey'=>'支付秘钥，用于签名验证']);
 
 //商户订单号，微信支付订单号两者至少要有一个
 $inputObj->SetOut_trade_no('退款订单对应的订单号');

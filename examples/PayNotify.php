@@ -7,9 +7,7 @@
 
 require_once '../vendor/autoload.php';
 
-$pay_notify = new \Wechat\Pay\WxPayNotify();
-
-$pay_notify->SetPartnerkey('支付秘钥，用于签名验证');
+$pay_notify = new \Wechat\Pay\WxPayNotify(['partnerkey'=>'支付秘钥，用于签名验证','appid'=>'微信应用的唯一标识appid']);
 
 return $pay_notify->notify(function ($result){
 });

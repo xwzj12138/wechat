@@ -13,7 +13,7 @@ use Wechat\Pay\WxPayException;
 
 //实际使用时，可以根据需求捕获异常信息
 try{
-    $inputObj = new WxPayUnifiedOrder();
+    $inputObj = new WxPayUnifiedOrder(['partnerkey'=>'支付秘钥，用于签名验证']);
     //支付类型：JSAPI，NATIVE，APP，
     $inputObj->SetTrade_type('APP');
 
@@ -34,9 +34,6 @@ try{
 
     //设置商户号
     $inputObj->SetMch_id('vcdsbgffsbfd');
-
-    //商户平台支付秘钥
-    $inputObj->SetPartnerkey('sdadf');
 
     //设置支付价格，单位：分
     $inputObj->SetTotal_fee(5*100);
