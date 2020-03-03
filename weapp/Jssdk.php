@@ -10,6 +10,7 @@ namespace Wechat\Weapp;
 
 class Jssdk extends WeAppData
 {
+    protected $domain = 'https://open.weixin.qq.com/';
     /**
      * 网页授权
      * @param $redirect_url 授权后重定向的回调链接地址， 请使用 urlEncode 对链接进行处理
