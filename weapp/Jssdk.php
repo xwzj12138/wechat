@@ -10,7 +10,6 @@ namespace Wechat\Weapp;
 
 class Jssdk extends WeAppData
 {
-    protected $domain = 'https://open.weixin.qq.com/';
     /**
      * 网页授权
      * @param $redirect_url 授权后重定向的回调链接地址， 请使用 urlEncode 对链接进行处理
@@ -22,7 +21,7 @@ class Jssdk extends WeAppData
     public function auth($redirect_url,$scope='snsapi_userinfo',$state=null)
     {
         $redirect_url = urlencode($redirect_url);
-        $url = $this->domain.'connect/oauth2/authorize?appid='.$this->appid.'&redirect_uri='.$redirect_url.'&response_type=code&scope='.$scope;
+        $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='.$this->appid.'&redirect_uri='.$redirect_url.'&response_type=code&scope='.$scope;
         if($state) $url.'&state='.$state;
         $url = $url.'#wechat_redirect';
         header('location:'.$url);
