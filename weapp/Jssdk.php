@@ -21,10 +21,61 @@ class Jssdk extends WeAppData
     public function auth($redirect_url,$scope='snsapi_userinfo',$state=null)
     {
         $redirect_url = urlencode($redirect_url);
-        $url = $this->domain.'/connect/oauth2/authorize?appid='.$this->appid.'&redirect_uri='.$redirect_url.'&response_type=code&scope='.$scope;
+        $url = $this->domain.'connect/oauth2/authorize?appid='.$this->appid.'&redirect_uri='.$redirect_url.'&response_type=code&scope='.$scope;
         if($state) $url.'&state='.$state;
         $url = $url.'#wechat_redirect';
         header('location:'.$url);
+    }
+
+    /**
+     * 通过code获取access_token
+     * @param $code 网页授权获取的code
+     * @return mixed
+     * @throws WeAppException
+     */
+    public function getTokenByCode($code)
+    {
+        $url = $this->domain.'sns/oauth2/access_token?appid='.$this->appid.'&secret='.$this->appSecret.'&code='.$code.'&grant_type=authorization_code';
+        return $this->getData($url);
+    }
+
+    /**
+     * 刷新token
+     * @param $refresh_token 通过access_token获取到的refresh_token参数
+     * @return mixed
+     * @throws WeAppException
+     */
+    public function refreshToken($refresh_token)
+    {
+        $url = $this->domain.'sns/oauth2/refresh_token?appid='.$this->appid.'&grant_type=refresh_token&refresh_token='.$refresh_token;
+        return $this->getData($url);
+    }
+
+    /**
+     * 网页授权获取用户信息
+     * @param $access_token 网页授权接口调用凭证,注意：此access_token与基础支持的access_token不同
+     * @param $openid 用户的唯一标识
+     * @param string $lang 返回国家地区语言版本，zh_CN 简体，zh_TW 繁体，en 英语
+     * @return mixed
+     * @throws WeAppException
+     */
+    public function getSnsapiUserInfo($access_token,$openid,$lang='zh_CN')
+    {
+        $url = $this->domain.'sns/userinfo?access_token='.$access_token.'&openid='.$openid.'&lang='.$lang;
+        return $this->getData($url);
+    }
+
+    /**
+     * 检验授权凭证（access_token）是否有效
+     * @param $access_token 网页授权接口调用凭证,注意：此access_token与基础支持的access_token不同
+     * @param $openid 用户的唯一标识
+     * @return mixed
+     * @throws WeAppException
+     */
+    public function snsAuth($access_token,$openid)
+    {
+        $url = $this->domain.'sns/userinfo?access_token='.$access_token.'&openid='.$openid;
+        return $this->getData($url);
     }
 
     /**
