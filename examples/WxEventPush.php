@@ -8,7 +8,7 @@
 require_once '../vendor/autoload.php';
 
 
-echo \Wechat\Weapp\EventPush::getData('111111',function ($push_data,&$send_obj){
+echo \Wechat\Weapp\EventPush::getData('111111',function ($push_data,$send_obj){
     switch (strtolower($push_data['MsgType'])){
         case 'event':
             switch (strtolower($push_data['Event'])){
