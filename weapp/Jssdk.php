@@ -25,10 +25,11 @@ class Jssdk extends WeAppData
         if($state) $url.'&state='.$state;
         $url = $url.'#wechat_redirect';
         header('location:'.$url);
+        exit();
     }
 
     /**
-     * 通过code获取access_token
+     * 通过code获取access_token及用户openid
      * @param $code 网页授权获取的code
      * @return mixed
      * @throws WeAppException
@@ -137,5 +138,18 @@ class Jssdk extends WeAppData
             $str .= substr($chars, mt_rand(0, strlen($chars)-1), 1);
         }
         return $str;
+    }
+
+    /**
+     * 获取用户基本信息（包括UnionID机制）
+     * @param $accessToken 微信全局access_token
+     * @param $openid 用户在公众号的唯一标识
+     * @return mixed
+     * @throws WeAppException
+     */
+    public function getUserInfo($accessToken,$openid)
+    {
+        $url = $this->domain.'cgi-bin/user/info?lang=zh_CN&access_token='.$accessToken.'&openid='.$openid;
+        return $this->getData($url);
     }
 }

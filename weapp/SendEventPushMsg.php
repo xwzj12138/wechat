@@ -75,9 +75,9 @@ class SendEventPushMsg
 
     /**
      * 回复视频消息
-     * @param $media_id
-     * @param $title
-     * @param $description
+     * @param $media_id 通过素材管理中的接口上传多媒体文件，得到的id
+     * @param $title 视频消息的标题
+     * @param $description 视频消息的描述
      * @return string
      */
     public function video($media_id,$title,$description)
@@ -125,7 +125,8 @@ class SendEventPushMsg
 
     /**
      * 回复图文消息
-     * @param $data
+     * @param $data 图文消息信息，注意，如果图文数超过限制，则将只发限制内的条数
+     * 格式[{"title":"标题","description":"描述","picurl":"图片链接","url":"点击图文消息跳转链接"}]
      * @return string
      */
     public function news($data)

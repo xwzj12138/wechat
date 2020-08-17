@@ -12,8 +12,8 @@ class EventPush
 {
     /**
      * 获取推送的数据并验证签名，判断是否微信推送的
-     * @param $token
-     * @param $callback
+     * @param $token 签名token值，必须与微信公众号设置的token一致
+     * @param $callback 回调函数，签名验证成功后的回调，回调参数，$push_data：微信推送的数据 $send_obj，消息发送对象
      * @return bool|mixed
      */
     public static function getData($token,$callback)
@@ -32,7 +32,8 @@ class EventPush
             }
             //获取事件推送的数据对象
             $push_data = self::xmlToArray();
-            return call_user_func($callback, $push_data);
+            $send_obj = new SendEventPushMsg($push_data['FromUserName'],$push_data['ToUserName']);
+            return call_user_func($callback, $push_data,$send_obj);
         }
         return 'success';
     }

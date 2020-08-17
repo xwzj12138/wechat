@@ -154,13 +154,13 @@ $qr_code_content = $inputObj->bizpayurl();
 require_once '../vendor/autoload.php';
 
 
-echo \Wechat\Weapp\EventPush::getData('111111',function ($push_data){
+echo \Wechat\Weapp\EventPush::getData('111111',function ($push_data,&$send_obj){
     switch (strtolower($push_data['MsgType'])){
         case 'event':
             switch (strtolower($push_data['Event'])){
                 case 'subscribe':
                     //关注关注事件，这里分为直接关注事件和扫描带参数二维码事件,还未关注时的事件推送
-                    return (new \Wechat\Weapp\SendEventPushMsg())->text('欢迎关注公众号');
+                    return $send_obj->text('欢迎关注公众号');
                     break;
                 case 'unsubscribe':
                     //取消关注事件
