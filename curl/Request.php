@@ -36,7 +36,7 @@ class Request
         if($post){
             //post提交方式
             curl_setopt($ch, CURLOPT_POST, TRUE);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post,JSON_UNESCAPED_UNICODE));
         }
         //运行curl
         $data = curl_exec($ch);
